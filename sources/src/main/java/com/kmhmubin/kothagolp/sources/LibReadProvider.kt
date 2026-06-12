@@ -265,7 +265,7 @@ class LibReadProvider : MainProvider() {
         val chapters = mutableListOf<Chapter>()
         try {
             val chapterResponse = post("$mainUrl/api/chapterlist.php", data = mapOf("aid" to aid))
-            val cleanText = chapterResponse.body.replace("\\", "")
+            val cleanText = chapterResponse.text.replace("\\", "")
             val chapterDoc = Jsoup.parse(cleanText)
             val prefix = baseUrl.removeSuffix(".html")
             chapterDoc.select("option").forEach { option ->

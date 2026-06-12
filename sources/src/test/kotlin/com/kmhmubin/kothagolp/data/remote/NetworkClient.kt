@@ -1,5 +1,7 @@
 package com.kmhmubin.kothagolp.data.remote
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -35,7 +37,7 @@ object NetworkClient {
         val headers: Map<String, String> = emptyMap()
     )
 
-    suspend fun get(url: String, headers: Map<String, String> = emptyMap()): NetworkResponse {
+    suspend fun get(url: String, headers: Map<String, String> = emptyMap()): NetworkResponse = withContext(Dispatchers.IO) {
         val request = Request.Builder()
             .url(url)
             .also { builder ->
@@ -47,14 +49,14 @@ object NetworkClient {
             .build()
         val response = client.newCall(request).execute()
         val body = response.body?.string() ?: ""
-        return buildResponse(response.code, body, url, response.headers)
+        buildResponse(response.code, body, url, response.headers)
     }
 
     suspend fun post(
         url: String,
         data: Map<String, String> = emptyMap(),
         headers: Map<String, String> = emptyMap()
-    ): NetworkResponse {
+    ): NetworkResponse = withContext(Dispatchers.IO) {
         val formBody = FormBody.Builder()
             .also { b -> data.forEach { (k, v) -> b.add(k, v) } }
             .build()
@@ -68,14 +70,14 @@ object NetworkClient {
             .build()
         val response = client.newCall(request).execute()
         val body = response.body?.string() ?: ""
-        return buildResponse(response.code, body, url, response.headers)
+        buildResponse(response.code, body, url, response.headers)
     }
 
     suspend fun postJson(
         url: String,
         json: String,
         headers: Map<String, String> = emptyMap()
-    ): NetworkResponse {
+    ): NetworkResponse = withContext(Dispatchers.IO) {
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val request = Request.Builder()
             .url(url)
@@ -87,7 +89,7 @@ object NetworkClient {
             .build()
         val response = client.newCall(request).execute()
         val body = response.body?.string() ?: ""
-        return buildResponse(response.code, body, url, response.headers)
+        buildResponse(response.code, body, url, response.headers)
     }
 
     private fun buildResponse(
