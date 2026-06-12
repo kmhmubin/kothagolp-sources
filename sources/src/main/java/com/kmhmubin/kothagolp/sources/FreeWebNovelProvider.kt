@@ -124,16 +124,9 @@ class FreeWebNovelProvider : MainProvider() {
     }
 
     override suspend fun search(query: String): List<Novel> {
-        val url = "$mainUrl/search/"
-        val response = post(
-            url = url,
-            headers = mapOf(
-                "Referer" to mainUrl, "X-Requested-With" to "XMLHttpRequest",
-                "Content-Type" to "application/x-www-form-urlencoded"
-            ),
-            data = mapOf("searchkey" to query)
-        )
-        val document = response.document
+        val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
+        val url = "$mainUrl/search/?searchkey=$encodedQuery"
+        val document = get(url).document
         val elements = document.select("div.li-row")
         return elements.mapNotNull { parseNovelElement(it) }
     }

@@ -34,4 +34,5 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
     testImplementation("com.squareup.okhttp3:okhttp:4.12.0")
     testImplementation("org.jsoup:jsoup:1.18.1")
+    testImplementation("org.json:json:20240303")
 }

@@ -84,7 +84,7 @@ class NovelBinProvider : MainProvider() {
         )
         val novelDetailTitle = listOf("h3.title", "div.books h3", "div.m-imgtxt h3", ".book-info h3")
         val chapterContent = listOf("#chapter-content", "#chr-content", ".txt", ".chapter-content", "#content")
-        val chapterList = listOf("select > option[value]", ".list-chapter > li > a", "ul.list-chapter li a", "#list-chapter a")
+        val chapterList = listOf("li[data-chapter-item] a", "select > option[value]", ".list-chapter > li > a", "ul.list-chapter li a", "#list-chapter a")
         val synopsis = listOf("div.desc-text", "div.inner", ".summary .content", "#editdescription")
         val poster = listOf("div.book > img", "div.books img", "div.m-imgtxt img", ".book-info img")
         val author = listOf(
