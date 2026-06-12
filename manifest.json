@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "url": "https://github.com/kmhmubin/kothagolp-sources/releases/latest/download/sources.apk",
+  "sources": [
+    {"id": "novelfire", "class": "com.kmhmubin.kothagolp.sources.NovelFireProvider"},
+    {"id": "wtrlab", "class": "com.kmhmubin.kothagolp.sources.WtrLabProvider"},
+    {"id": "novelbin", "class": "com.kmhmubin.kothagolp.sources.NovelBinProvider"},
+    {"id": "libread", "class": "com.kmhmubin.kothagolp.sources.LibReadProvider"},
+    {"id": "royalroad", "class": "com.kmhmubin.kothagolp.sources.RoyalRoadProvider"},
+    {"id": "novelsonline", "class": "com.kmhmubin.kothagolp.sources.NovelsOnlineProvider"},
+    {"id": "lnori", "class": "com.kmhmubin.kothagolp.sources.LnoriProvider"},
+    {"id": "webnovel", "class": "com.kmhmubin.kothagolp.sources.WebnovelProvider"},
+    {"id": "freewebnovel", "class": "com.kmhmubin.kothagolp.sources.FreeWebNovelProvider"},
+    {"id": "allnovel", "class": "com.kmhmubin.kothagolp.sources.AllNovelProvider"},
+    {"id": "empirenovel", "class": "com.kmhmubin.kothagolp.sources.EmpireNovelProvider"},
+    {"id": "lightnovelworld", "class": "com.kmhmubin.kothagolp.sources.LightNovelWorldProvider"},
+    {"id": "scribblehub", "class": "com.kmhmubin.kothagolp.sources.ScribblehubProvider"},
+    {"id": "readnovelfull", "class": "com.kmhmubin.kothagolp.sources.ReadNovelFullProvider"},
+    {"id": "wuxiabox", "class": "com.kmhmubin.kothagolp.sources.WuxiaBoxProvider"}
+  ]
+}

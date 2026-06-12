@@ -1,0 +1,65 @@
+name: Build Sources APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build APK
+        run: ./gradlew :sources:assembleRelease
+
+      - name: Find APK
+        id: apk
+        run: |
+          APK_PATH=$(find sources/build/outputs/apk/release -name "*.apk" | head -1)
+          echo "path=$APK_PATH" >> $GITHUB_OUTPUT
+
+      - name: Bump manifest version
+        run: |
+          python3 - <<'EOF'
+          import json, os
+          with open("manifest.json") as f:
+              m = json.load(f)
+          m["version"] += 1
+          with open("manifest.json", "w") as f:
+              json.dump(m, f, indent=2)
+          print(f"Version bumped to {m['version']}")
+          EOF
+
+      - name: Copy APK
+        run: cp "${{ steps.apk.outputs.path }}" sources.apk
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}
+          name: "Sources v${{ github.run_number }}"
+          files: sources.apk
+          generate_release_notes: false
+
+      - name: Commit updated manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add manifest.json
+          git commit -m "chore: bump sources version [skip ci]" || echo "Nothing to commit"
+          git push
