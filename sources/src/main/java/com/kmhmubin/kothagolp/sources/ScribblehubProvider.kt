@@ -10,6 +10,7 @@ class ScribblehubProvider : MainProvider() {
 
     override val name = "Scribblehub"
     override val mainUrl = "https://www.scribblehub.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=scribblehub.com&sz=64"
     override val hasMainPage = false
     override val rateLimitTime: Long = 500L
 

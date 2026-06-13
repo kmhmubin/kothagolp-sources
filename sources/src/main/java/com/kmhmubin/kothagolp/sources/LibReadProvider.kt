@@ -17,6 +17,7 @@ class LibReadProvider : MainProvider() {
 
     override val name = "LibRead"
     override val mainUrl = "https://libread.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=libread.com&sz=64"
     override val hasMainPage = true
 
     private val searchInterval = 3400L

@@ -14,6 +14,7 @@ class FreeWebNovelProvider : MainProvider() {
 
     override val name = "FreeWebNovel"
     override val mainUrl = "https://freewebnovel.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=freewebnovel.com&sz=64"
     override val hasMainPage = true
 
     override val tags = listOf(

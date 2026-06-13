@@ -19,6 +19,7 @@ abstract class MainProvider {
     open val extraFilterGroups: List<FilterGroup> = emptyList()
     open val rateLimitTime: Long = 0L
     open val iconRes: Int? = null
+    open val iconUrl: String? = null
 
     abstract suspend fun loadMainPage(
         page: Int,

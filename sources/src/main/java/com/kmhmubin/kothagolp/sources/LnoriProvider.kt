@@ -14,6 +14,7 @@ class LnoriProvider : MainProvider() {
 
     override val name = "Lnori"
     override val mainUrl = "https://lnori.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=lnori.com&sz=64"
     override val hasMainPage = true
 
     private val pageSize = 50

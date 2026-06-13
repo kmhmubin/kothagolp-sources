@@ -13,6 +13,7 @@ class LightNovelWorldProvider : MainProvider() {
 
     override val name = "LightNovelWorld"
     override val mainUrl = "https://lightnovelworld.org"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=lightnovelworld.org&sz=64"
     override val hasMainPage = true
 
     override val orderBys = listOf(

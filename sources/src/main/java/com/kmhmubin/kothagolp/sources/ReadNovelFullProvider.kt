@@ -11,6 +11,7 @@ class ReadNovelFullProvider : MainProvider() {
 
     override val name = "ReadNovelFull"
     override val mainUrl = "https://readnovelfull.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=readnovelfull.com&sz=64"
     override val hasMainPage = false
 
     override suspend fun loadMainPage(

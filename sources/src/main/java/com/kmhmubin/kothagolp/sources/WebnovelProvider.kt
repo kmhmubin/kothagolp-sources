@@ -18,6 +18,7 @@ class WebnovelProvider : MainProvider() {
 
     override val name = "Webnovel"
     override val mainUrl = "https://www.webnovel.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=webnovel.com&sz=64"
     override val hasMainPage = true
 
     private val csrfToken = AtomicReference<String?>(null)

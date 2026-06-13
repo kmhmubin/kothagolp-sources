@@ -15,6 +15,7 @@ class EmpireNovelProvider : MainProvider() {
 
     override val name = "EmpireNovel"
     override val mainUrl = "https://www.empirenovel.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=empirenovel.com&sz=64"
     override val hasMainPage = true
     override val rateLimitTime: Long = 750L
 

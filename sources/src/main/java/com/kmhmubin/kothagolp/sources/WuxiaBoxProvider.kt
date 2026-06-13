@@ -16,6 +16,7 @@ class WuxiaBoxProvider : MainProvider() {
 
     override val name = "WuxiaBox"
     override val mainUrl = "https://www.wuxiabox.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=wuxiabox.com&sz=64"
     override val hasMainPage = true
 
     override val orderBys = listOf(

@@ -14,6 +14,7 @@ class RoyalRoadProvider : MainProvider() {
 
     override val name = "Royal Road"
     override val mainUrl = "https://www.royalroad.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=royalroad.com&sz=64"
     override val hasMainPage = true
     override val rateLimitTime: Long = 500L
 

@@ -16,6 +16,7 @@ class NovelBinProvider : MainProvider() {
 
     override val name = "NovelBin"
     override val mainUrl = "https://novelbin.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=novelbin.com&sz=64"
     override val hasMainPage = true
 
     private val searchInterval = 3400L

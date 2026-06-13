@@ -14,6 +14,7 @@ class AllNovelProvider : MainProvider() {
 
     override val name = "AllNovel"
     override val mainUrl = "https://allnovel.org"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=allnovel.org&sz=64"
     override val hasMainPage = true
 
     override val tags = listOf(

@@ -25,6 +25,7 @@ class WtrLabProvider : MainProvider() {
 
     override val name = "WTR-LAB"
     override val mainUrl = "https://wtr-lab.com"
+    override val iconUrl = "https://www.google.com/s2/favicons?domain=wtr-lab.com&sz=64"
     override val hasMainPage = true
     override val rateLimitTime: Long = 3000L
 
