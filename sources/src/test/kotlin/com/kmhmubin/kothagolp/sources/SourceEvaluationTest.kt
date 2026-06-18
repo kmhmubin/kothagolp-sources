@@ -20,11 +20,9 @@ import org.junit.Test
  */
 class SourceEvaluationTest {
 
-    // Set to true to run real network tests (disabled by default for CI)
     private val runNetworkTests = System.getenv("RUN_SOURCE_TESTS") == "true"
 
-    // Providers requiring Cloudflare managed-challenge bypass — work in app (WebView), not JVM
-    private val cloudflareProtected = setOf("EmpireNovel", "WuxiaBox")
+    private val cloudflareProtected = setOf("EmpireNovel", "WuxiaBox", "GrayCity", "SonicMTL", "WuxiaWorld")
 
     private fun skipIfNoNetwork(block: () -> Unit) {
         if (!runNetworkTests) {
@@ -70,6 +68,8 @@ class SourceEvaluationTest {
 
         println("  PASS: ${provider.name}")
     }
+
+    // ======================== Original 15 Providers ========================
 
     @Test
     fun testAllNovelProvider() = skipIfNoNetwork {
@@ -148,6 +148,113 @@ class SourceEvaluationTest {
         evaluateProvider(WtrLabProvider(), "system")
     }
 
+    // ======================== New Providers ========================
+
+    @Test
+    fun testChrysanthemumGardenProvider() = skipIfNoNetwork {
+        evaluateProvider(ChrysanthemumGardenProvider(), "cultivation")
+    }
+
+    @Test
+    fun testFenrirRealmProvider() = skipIfNoNetwork {
+        evaluateProvider(FenrirRealmProvider(), "fantasy")
+    }
+
+    @Test
+    fun testNovelBuddyProvider() = skipIfNoNetwork {
+        evaluateProvider(NovelBuddyProvider(), "system")
+    }
+
+    @Test
+    fun testLightNovelTranslationsProvider() = skipIfNoNetwork {
+        evaluateProvider(LightNovelTranslationsProvider(), "romance")
+    }
+
+    @Test
+    fun testLnMTLProvider() = skipIfNoNetwork {
+        evaluateProvider(LnMTLProvider(), "martial")
+    }
+
+    @Test
+    fun testMTLNovelProvider() = skipIfNoNetwork {
+        evaluateProvider(MTLNovelProvider(), "dragon")
+    }
+
+    @Test
+    fun testPawReadProvider() = skipIfNoNetwork {
+        evaluateProvider(PawReadProvider(), "fantasy")
+    }
+
+    @Test
+    fun testRanobesProvider() = skipIfNoNetwork {
+        evaluateProvider(RanobesProvider(), "system")
+    }
+
+    @Test
+    fun testWattpadProvider() = skipIfNoNetwork {
+        evaluateProvider(WattpadProvider(), "romance")
+    }
+
+    @Test
+    fun testNovelFullProvider() = skipIfNoNetwork {
+        evaluateProvider(NovelFullProvider(), "cultivation")
+    }
+
+    @Test
+    fun testWuxiaWorldProvider() = skipIfNoNetwork {
+        val provider = WuxiaWorldProvider()
+        skipIfCloudflare(provider) { evaluateProvider(provider, "wuxia") }
+    }
+
+    @Test
+    fun testWuxiaClickProvider() = skipIfNoNetwork {
+        evaluateProvider(WuxiaClickProvider(), "martial arts")
+    }
+
+    @Test
+    fun testSonicMTLProvider() = skipIfNoNetwork {
+        val provider = SonicMTLProvider()
+        skipIfCloudflare(provider) { evaluateProvider(provider, "fantasy") }
+    }
+
+    @Test
+    fun testHiraethTranslationProvider() = skipIfNoNetwork {
+        evaluateProvider(HiraethTranslationProvider(), "romance")
+    }
+
+    @Test
+    fun testNovelDexProvider() = skipIfNoNetwork {
+        evaluateProvider(NovelDexProvider(), "fantasy")
+    }
+
+    @Test
+    fun testNovelLightProvider() = skipIfNoNetwork {
+        evaluateProvider(NovelLightProvider(), "fantasy")
+    }
+
+    @Test
+    fun testGrayCityProvider() = skipIfNoNetwork {
+        val provider = GrayCityProvider()
+        skipIfCloudflare(provider) { evaluateProvider(provider, "action") }
+    }
+
+    @Test
+    fun testNoBadNovelProvider() = skipIfNoNetwork {
+        evaluateProvider(NoBadNovelProvider(), "fantasy")
+    }
+
+    @Test
+    fun testReadHiveProvider() = skipIfNoNetwork {
+        evaluateProvider(ReadHiveProvider(), "romance")
+    }
+
+    @Test
+    fun testOceanOfPDFProvider() = skipIfNoNetwork {
+        evaluateProvider(OceanOfPDFProvider(), "fantasy")
+    }
+
+    // ======================== Bulk Tests ========================
+
     @Test
     fun testAllProviders() = skipIfNoNetwork {
         val providers = listOf(
@@ -155,7 +262,13 @@ class SourceEvaluationTest {
             FreeWebNovelProvider(), NovelFireProvider(), NovelsOnlineProvider(),
             LnoriProvider(), EmpireNovelProvider(), RoyalRoadProvider(),
             WebnovelProvider(), LightNovelWorldProvider(), ScribblehubProvider(),
-            ReadNovelFullProvider(), WuxiaBoxProvider(), WtrLabProvider()
+            ReadNovelFullProvider(), WuxiaBoxProvider(), WtrLabProvider(),
+            ChrysanthemumGardenProvider(), FenrirRealmProvider(), NovelBuddyProvider(),
+            LightNovelTranslationsProvider(), LnMTLProvider(), MTLNovelProvider(),
+            PawReadProvider(), RanobesProvider(), WattpadProvider(), NovelFullProvider(),
+            WuxiaWorldProvider(), WuxiaClickProvider(), SonicMTLProvider(),
+            HiraethTranslationProvider(), NovelDexProvider(), NovelLightProvider(),
+            GrayCityProvider(), NoBadNovelProvider(), ReadHiveProvider(), OceanOfPDFProvider()
         )
         val errors = mutableListOf<Pair<String, String>>()
         for (provider in providers) {
@@ -178,19 +291,24 @@ class SourceEvaluationTest {
 
     @Test
     fun testProvidersInstantiate() {
-        // Smoke test — just verify all 15 providers can be instantiated
         val providers = listOf(
             AllNovelProvider(), NovelBinProvider(), LibReadProvider(),
             FreeWebNovelProvider(), NovelFireProvider(), NovelsOnlineProvider(),
             LnoriProvider(), EmpireNovelProvider(), RoyalRoadProvider(),
             WebnovelProvider(), LightNovelWorldProvider(), ScribblehubProvider(),
-            ReadNovelFullProvider(), WuxiaBoxProvider(), WtrLabProvider()
+            ReadNovelFullProvider(), WuxiaBoxProvider(), WtrLabProvider(),
+            ChrysanthemumGardenProvider(), FenrirRealmProvider(), NovelBuddyProvider(),
+            LightNovelTranslationsProvider(), LnMTLProvider(), MTLNovelProvider(),
+            PawReadProvider(), RanobesProvider(), WattpadProvider(), NovelFullProvider(),
+            WuxiaWorldProvider(), WuxiaClickProvider(), SonicMTLProvider(),
+            HiraethTranslationProvider(), NovelDexProvider(), NovelLightProvider(),
+            GrayCityProvider(), NoBadNovelProvider(), ReadHiveProvider(), OceanOfPDFProvider()
         )
-        assert(providers.size == 15) { "Expected 15 providers, got ${providers.size}" }
+        assert(providers.size == 35) { "Expected 35 providers, got ${providers.size}" }
         providers.forEach { provider ->
             assert(provider.name.isNotBlank()) { "Provider has blank name: $provider" }
             assert(provider.mainUrl.startsWith("https://")) { "${provider.name}: mainUrl should start with https://" }
         }
-        println("All 15 providers instantiate correctly.")
+        println("All 35 providers instantiate correctly.")
     }
 }

@@ -61,6 +61,86 @@
     {
       "id": "wuxiabox",
       "class": "com.kmhmubin.kothagolp.sources.WuxiaBoxProvider"
+    },
+    {
+      "id": "chrysanthemumgarden",
+      "class": "com.kmhmubin.kothagolp.sources.ChrysanthemumGardenProvider"
+    },
+    {
+      "id": "fenrirrealm",
+      "class": "com.kmhmubin.kothagolp.sources.FenrirRealmProvider"
+    },
+    {
+      "id": "novelbuddy",
+      "class": "com.kmhmubin.kothagolp.sources.NovelBuddyProvider"
+    },
+    {
+      "id": "lightnoveltranslations",
+      "class": "com.kmhmubin.kothagolp.sources.LightNovelTranslationsProvider"
+    },
+    {
+      "id": "lnmtl",
+      "class": "com.kmhmubin.kothagolp.sources.LnMTLProvider"
+    },
+    {
+      "id": "mtlnovel",
+      "class": "com.kmhmubin.kothagolp.sources.MTLNovelProvider"
+    },
+    {
+      "id": "pawread",
+      "class": "com.kmhmubin.kothagolp.sources.PawReadProvider"
+    },
+    {
+      "id": "ranobes",
+      "class": "com.kmhmubin.kothagolp.sources.RanobesProvider"
+    },
+    {
+      "id": "wattpad",
+      "class": "com.kmhmubin.kothagolp.sources.WattpadProvider"
+    },
+    {
+      "id": "novelfull",
+      "class": "com.kmhmubin.kothagolp.sources.NovelFullProvider"
+    },
+    {
+      "id": "wuxiaworld",
+      "class": "com.kmhmubin.kothagolp.sources.WuxiaWorldProvider"
+    },
+    {
+      "id": "wuxiaclick",
+      "class": "com.kmhmubin.kothagolp.sources.WuxiaClickProvider"
+    },
+    {
+      "id": "sonicmtl",
+      "class": "com.kmhmubin.kothagolp.sources.SonicMTLProvider"
+    },
+    {
+      "id": "hiraethtranslation",
+      "class": "com.kmhmubin.kothagolp.sources.HiraethTranslationProvider"
+    },
+    {
+      "id": "noveldex",
+      "class": "com.kmhmubin.kothagolp.sources.NovelDexProvider"
+    },
+    {
+      "id": "novellight",
+      "class": "com.kmhmubin.kothagolp.sources.NovelLightProvider"
+    },
+    {
+      "id": "graycity",
+      "class": "com.kmhmubin.kothagolp.sources.GrayCityProvider"
+    },
+    {
+      "id": "nobadnovel",
+      "class": "com.kmhmubin.kothagolp.sources.NoBadNovelProvider"
+    },
+    {
+      "id": "readhive",
+      "class": "com.kmhmubin.kothagolp.sources.ReadHiveProvider"
+    },
+    {
+      "id": "oceanofpdf",
+      "class": "com.kmhmubin.kothagolp.sources.OceanOfPDFProvider"
     }
   ]
 }
