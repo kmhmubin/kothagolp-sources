@@ -358,17 +358,56 @@ Rules for `id`:
 - Must be unique across all sources
 - Should match the domain name (e.g. `royalroad`, `novelfire`, `wuxiaworld`)
 
-### Step 4 — Build and test
+### Step 4 — Add your test
 
-```bash
-# From repo root
-./gradlew :sources:assembleRelease
+Open `sources/src/test/kotlin/com/kmhmubin/kothagolp/sources/SourceEvaluationTest.kt`.
 
-# Run tests (requires network)
-RUN_SOURCE_TESTS=true ./gradlew :sources:test
+Add one test method for your provider (under the `// New Providers` section):
+
+```kotlin
+@Test
+fun testYourSiteProvider() = skipIfNoNetwork {
+    evaluateProvider(YourSiteProvider(), "fantasy")
+}
 ```
 
-### Step 5 — Push
+Also add your provider to the `testAllProviders()` and `testProvidersInstantiate()` bulk lists at the bottom of the file.
+
+### Step 5 — Run tests
+
+**Layer 1 — no network, run first (instant):**
+```bash
+./gradlew :sources:test --tests "*.SourceEvaluationTest.testProvidersInstantiate"
+```
+Verifies: class compiles, instantiates without crash, `name` is not blank, `mainUrl` starts with `https://`. Catches typos and structural errors. Run this before touching network.
+
+**Layer 2 — real HTTP, run after Layer 1 passes:**
+```bash
+RUN_SOURCE_TESTS=true ./gradlew :sources:test --tests "*.SourceEvaluationTest.testYourSiteProvider"
+```
+Makes real network requests. Checks all 4 methods:
+- `loadMainPage(1)` returns at least 1 novel
+- `search("fantasy")` returns at least 1 result
+- `load(firstResult.url)` returns non-null `NovelDetails` with chapters
+- `loadChapterContent(firstChapter.url)` returns non-empty HTML
+
+**Layer 3 — on-device only (Cloudflare-protected sites):**
+
+Sites using Cloudflare managed challenge cannot pass Layer 2 — they block JVM/OkHttp and only work inside the app's WebView (`CloudflareManager`). Current Cloudflare-protected sources: `EmpireNovel`, `WuxiaWorld`, `GrayCity`, `SonicMTL`, `WuxiaBox`.
+
+For these, add your provider to the `cloudflareProtected` set in `SourceEvaluationTest` so it's skipped automatically:
+```kotlin
+private val cloudflareProtected = setOf("EmpireNovel", "WuxiaBox", "GrayCity", "SonicMTL", "WuxiaWorld", "YourSite")
+```
+
+Then test on device:
+```bash
+./gradlew :sources:assembleRelease
+# Sideload sources-release.apk on your Android device
+# Or push to main → CI publishes → force-sync in app Settings → Sources
+```
+
+### Step 6 — Push
 
 Push to `main`. CI will automatically:
 1. Build `sources.apk`
@@ -500,7 +539,33 @@ override suspend fun loadChapterContent(url: String): String? {
 2. Make your changes — fix selectors, update URLs, add new filters, etc.
 3. **Do not change the class name** — the class name is what the app uses to load it via reflection
 4. **Do not change the `id` in manifest.json** — changing the id means the app treats it as a new source
-5. Push to `main` — CI handles the rest
+5. Run Layer 2 test for that provider to confirm it still works
+6. Push to `main` — CI handles the rest
+
+---
+
+## Build and Update Cycle
+
+The build always produces one full APK containing all providers. There are no partial/incremental source updates — every push replaces the entire `sources.apk`.
+
+**Typical update workflow:**
+```
+1. Edit one or more *Provider.kt files
+2. ./gradlew :sources:test --tests "*.SourceEvaluationTest.testProvidersInstantiate"   # fast check
+3. RUN_SOURCE_TESTS=true ./gradlew :sources:test --tests "*.SourceEvaluationTest.testXxxProvider"  # per-provider
+4. git add + commit + push to main
+5. CI builds + bumps manifest.json version + publishes sources.apk (~3 min)
+6. App fetches manifest on next launch, sees higher version, downloads new APK automatically
+```
+
+**Build output location:**
+```
+sources/build/outputs/apk/release/sources-release-unsigned.apk
+```
+
+**Force app to re-sync immediately** (for testing without waiting for scheduled sync):
+- In-app: Settings → Sources → Sync Now (triggers `SourceSyncWorker` immediately)
+- Or reinstall the app (forces fresh manifest fetch on first launch)
 
 ---
 
