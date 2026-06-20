@@ -34,6 +34,7 @@ jobs:
           echo "path=$APK_PATH" >> $GITHUB_OUTPUT
 
       - name: Bump manifest version
+        id: bump
         run: |
           python3 - <<'EOF'
           import json, os
@@ -46,6 +47,8 @@ jobs:
           with open("manifest.json", "w") as f:
               json.dump(m, f, indent=2)
           print(f"Version bumped to {m['version']}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"version={m['version']}\n")
           EOF
 
       - name: Copy APK
@@ -54,8 +57,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ github.run_number }}
-          name: "Sources v${{ github.run_number }}"
+          tag_name: v${{ steps.bump.outputs.version }}
+          name: "Sources v${{ steps.bump.outputs.version }}"
           files: sources.apk
           generate_release_notes: false
 
