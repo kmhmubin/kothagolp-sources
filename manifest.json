@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": "9.1.0",
   "url": "https://github.com/kmhmubin/kothagolp-sources/releases/latest/download/sources.apk",
   "sources": [
     {
@@ -39,8 +39,8 @@
       "class": "com.kmhmubin.kothagolp.sources.AllNovelProvider"
     },
     {
-      "id": "empirenovel",
-      "class": "com.kmhmubin.kothagolp.sources.EmpireNovelProvider"
+      "id": "fenrirrealm",
+      "class": "com.kmhmubin.kothagolp.sources.FenrirRealmProvider"
     }
   ]
 }

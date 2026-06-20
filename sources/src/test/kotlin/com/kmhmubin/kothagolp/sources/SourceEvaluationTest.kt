@@ -10,7 +10,7 @@ import org.junit.Test
 /**
  * Source evaluation tests.
  * These are integration tests that make real HTTP requests.
- * Run selectively: ./gradlew :sources:test --tests "*.SourceEvaluationTest.*"
+ * Run selectively: ./gradlew :sources:testDebugUnitTest --tests "*.SourceEvaluationTest.*"
  *
  * Each test checks basic contract:
  * - loadMainPage returns at least 1 novel
@@ -22,19 +22,9 @@ class SourceEvaluationTest {
 
     private val runNetworkTests = System.getenv("RUN_SOURCE_TESTS") == "true"
 
-    private val cloudflareProtected = setOf("EmpireNovel")
-
     private fun skipIfNoNetwork(block: () -> Unit) {
         if (!runNetworkTests) {
             println("Skipping network test (set RUN_SOURCE_TESTS=true to enable)")
-            return
-        }
-        block()
-    }
-
-    private fun skipIfCloudflare(provider: MainProvider, block: () -> Unit) {
-        if (provider.name in cloudflareProtected) {
-            println("  SKIP: ${provider.name} — Cloudflare managed challenge (works in app, not JVM tests)")
             return
         }
         block()
@@ -107,9 +97,8 @@ class SourceEvaluationTest {
     }
 
     @Test
-    fun testEmpireNovelProvider() = skipIfNoNetwork {
-        val provider = EmpireNovelProvider()
-        skipIfCloudflare(provider) { evaluateProvider(provider, "sword") }
+    fun testFenrirRealmProvider() = skipIfNoNetwork {
+        evaluateProvider(FenrirRealmProvider(), "cultivation")
     }
 
     @Test
@@ -129,15 +118,11 @@ class SourceEvaluationTest {
         val providers = listOf(
             AllNovelProvider(), NovelBinProvider(), LibReadProvider(),
             FreeWebNovelProvider(), NovelFireProvider(), NovelsOnlineProvider(),
-            LnoriProvider(), EmpireNovelProvider(), RoyalRoadProvider(),
+            LnoriProvider(), FenrirRealmProvider(), RoyalRoadProvider(),
             WebnovelProvider()
         )
         val errors = mutableListOf<Pair<String, String>>()
         for (provider in providers) {
-            if (provider.name in cloudflareProtected) {
-                println("  SKIP: ${provider.name} — Cloudflare managed challenge")
-                continue
-            }
             try {
                 evaluateProvider(provider, "fantasy")
             } catch (e: Exception) {
@@ -156,7 +141,7 @@ class SourceEvaluationTest {
         val providers = listOf(
             AllNovelProvider(), NovelBinProvider(), LibReadProvider(),
             FreeWebNovelProvider(), NovelFireProvider(), NovelsOnlineProvider(),
-            LnoriProvider(), EmpireNovelProvider(), RoyalRoadProvider(),
+            LnoriProvider(), FenrirRealmProvider(), RoyalRoadProvider(),
             WebnovelProvider()
         )
         assert(providers.size == 10) { "Expected 10 providers, got ${providers.size}" }

@@ -39,7 +39,10 @@ jobs:
           import json, os
           with open("manifest.json") as f:
               m = json.load(f)
-          m["version"] += 1
+          parts = m["version"].split(".")
+          parts[1] = str(int(parts[1]) + 1)
+          parts[2] = "0"
+          m["version"] = ".".join(parts)
           with open("manifest.json", "w") as f:
               json.dump(m, f, indent=2)
           print(f"Version bumped to {m['version']}")
