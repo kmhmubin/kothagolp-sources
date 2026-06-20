@@ -33,22 +33,39 @@ jobs:
           APK_PATH=$(find sources/build/outputs/apk/release -name "*.apk" | head -1)
           echo "path=$APK_PATH" >> $GITHUB_OUTPUT
 
-      - name: Bump manifest version
+      - name: Bump manifest version and sync sources list
         id: bump
         run: |
           python3 - <<'EOF'
-          import json, os
+          import json, os, glob
+
           with open("manifest.json") as f:
               m = json.load(f)
-          parts = m["version"].split(".")
-          parts[1] = str(int(parts[1]) + 1)
-          parts[2] = "0"
-          m["version"] = ".".join(parts)
+
+          # Integer versioning — parse major component if string, then increment
+          v = m.get("version", 0)
+          new_version = int(str(v).split(".")[0]) + 1
+          m["version"] = new_version
+
+          # Auto-sync sources list from actual provider files
+          source_dir = "sources/src/main/java/com/kmhmubin/kothagolp/sources"
+          providers = []
+          for kt_file in sorted(glob.glob(f"{source_dir}/*.kt")):
+              class_name = os.path.basename(kt_file).replace(".kt", "")
+              if class_name.endswith("Provider"):
+                  provider_id = class_name.replace("Provider", "").lower()
+                  providers.append({
+                      "id": provider_id,
+                      "class": f"com.kmhmubin.kothagolp.sources.{class_name}"
+                  })
+          m["sources"] = providers
+
           with open("manifest.json", "w") as f:
               json.dump(m, f, indent=2)
-          print(f"Version bumped to {m['version']}")
+
+          print(f"Version bumped to {new_version}, {len(providers)} providers")
           with open(os.environ["GITHUB_OUTPUT"], "a") as out:
-              out.write(f"version={m['version']}\n")
+              out.write(f"version={new_version}\n")
           EOF
 
       - name: Copy APK
