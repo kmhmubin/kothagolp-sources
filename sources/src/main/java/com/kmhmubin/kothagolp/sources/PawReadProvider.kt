@@ -6,6 +6,8 @@ import com.kmhmubin.kothagolp.domain.model.MainPageResult
 import com.kmhmubin.kothagolp.domain.model.Novel
 import com.kmhmubin.kothagolp.domain.model.NovelDetails
 import com.kmhmubin.kothagolp.provider.MainProvider
+import org.json.JSONArray
+import org.json.JSONObject
 
 class PawReadProvider : MainProvider() {
 
@@ -86,35 +88,37 @@ class PawReadProvider : MainProvider() {
         val title = document.selectFirstOrNull("h1.j_novel_title, .book-title h1, h1")
             ?.textOrNull()?.trim() ?: return null
 
-        val coverStyle = document.selectFirstOrNull("#Cover, .book-cover, .novel-cover")
-            ?.attrOrNull("style")
-        val coverImg = document.selectFirstOrNull("#Cover img, .book-cover img, .novel-cover img")
-            ?.attrOrNull("src")
-        val cover = coverImg?.let { if (it.startsWith("http")) it else "$mainUrl$it" }
-            ?: coverStyle?.let { style ->
-                Regex("""url\(['"]?([^'")\s]+)['"]?\)""").find(style)?.groupValues?.get(1)
-                    ?.let { if (it.startsWith("http")) it else "$mainUrl$it" }
-            }
+        val cover = document.selectFirstOrNull("meta[property=\"og:image\"]")
+            ?.attrOrNull("content")
+            ?: document.selectFirstOrNull("#tab1_board .col-md-3 div[style*=\"background-image\"]")
+                ?.attrOrNull("style")
+                ?.let { Regex("""url\(([^)]+)\)""").find(it)?.groupValues?.get(1)?.trim('\'', '"') }
+                ?.let { if (it.startsWith("//")) "https:$it" else if (it.startsWith("http")) it else "$mainUrl$it" }
 
-        val infoItems = document.select("p.txtItme, .book-info p, .novel-info p")
         var author: String? = null
-        var status: String? = null
-        for (item in infoItems) {
-            val text = item.textOrNull() ?: continue
-            when {
-                text.contains("Author", ignoreCase = true) ->
-                    author = text.substringAfter(":").trim().takeIf { it.isNotBlank() }
-                text.contains("Status", ignoreCase = true) ->
-                    status = text.substringAfter(":").trim().takeIf { it.isNotBlank() }
-            }
+        var synopsis: String? = null
+        var tags: List<String> = emptyList()
+        val jsonLd = document.select("script[type=\"application/ld+json\"]")
+            .mapNotNull { it.data() }
+            .firstOrNull { it.contains("\"@type\":\"Book\"") }
+        if (jsonLd != null) {
+            try {
+                val json = JSONObject(jsonLd)
+                author = json.optJSONObject("author")?.optString("name", null)
+                synopsis = json.optString("description", null)?.takeIf { it.isNotBlank() }
+                val genreVal = json.opt("genre")
+                tags = when (genreVal) {
+                    is JSONArray -> (0 until genreVal.length()).mapNotNull { genreVal.optString(it).takeIf { s -> s.isNotBlank() } }
+                    is String -> if (genreVal.isNotBlank()) listOf(genreVal) else emptyList()
+                    else -> emptyList()
+                }
+            } catch (_: Throwable) {}
+        }
+        if (tags.isEmpty()) {
+            tags = document.select("div.tags span").mapNotNull { it.textOrNull()?.trim()?.trimStart('#')?.trim() }.filter { it.isNotBlank() }
         }
 
-        val synopsis = document.selectFirstOrNull("#full-des, .book-desc, .novel-desc, .intro")
-            ?.textOrNull()?.trim()
-
-        val tags = document.select("a.btn-default, .genre-tags a, .tags a")
-            .mapNotNull { it.textOrNull()?.trim() }
-            .filter { it.isNotBlank() }
+        val status = document.selectFirstOrNull("#tab1_board span.label")?.textOrNull()?.trim()
 
         val chapters = loadChapters(fullUrl)
 
