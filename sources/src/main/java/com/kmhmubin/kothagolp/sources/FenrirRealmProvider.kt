@@ -18,22 +18,49 @@ class FenrirRealmProvider : MainProvider() {
     override val iconUrl = "https://www.google.com/s2/favicons?domain=fenrirealm.com&sz=64"
     override val hasMainPage = true
 
+    private val apiBase = "$mainUrl/api/new/v2"
+
     private val jsonHeaders = mapOf(
         "Accept" to "application/json",
         "Content-Type" to "application/json"
     )
 
+    override val orderBys = listOf(
+        FilterOption("Popular", "popular"),
+        FilterOption("Latest", "latest"),
+        FilterOption("Updated", "updated")
+    )
+
+    override val tags = listOf(
+        FilterOption("All", "any"),
+        FilterOption("Ongoing", "on-going"),
+        FilterOption("Completed", "completed")
+    )
+
     override suspend fun loadMainPage(
         page: Int, orderBy: String?, tag: String?, extraFilters: Map<String, String>
     ): MainPageResult {
-        val url = "$mainUrl/api/series/filter?page=$page&per_page=20&status=any&order=popular"
+        val sort = orderBy?.takeIf { it.isNotBlank() } ?: "popular"
+        val status = tag?.takeIf { it.isNotBlank() } ?: "any"
+        val genre = extraFilters["genre"]
+
+        val url = buildString {
+            append("$apiBase/series?page=$page&per_page=20&status=$status&sort=$sort")
+            if (!genre.isNullOrBlank()) append("&genres[]=$genre")
+        }
         val response = get(url, jsonHeaders)
-        val novels = try {
+        var novels: List<Novel> = emptyList()
+        var hasNext = false
+        try {
             val json = JSONObject(response.text)
             val dataArray = json.optJSONArray("data") ?: JSONArray()
-            parseBrowseNovels(dataArray)
-        } catch (_: Throwable) { emptyList() }
-        return MainPageResult(url = url, novels = novels)
+            val meta = json.optJSONObject("meta")
+            val currentPage = meta?.optInt("current_page", 1) ?: 1
+            val lastPage = meta?.optInt("last_page", 1) ?: 1
+            novels = parseBrowseNovels(dataArray)
+            hasNext = currentPage < lastPage
+        } catch (_: Throwable) {}
+        return MainPageResult(url = url, novels = novels, hasNextPage = hasNext)
     }
 
     private fun parseBrowseNovels(dataArray: JSONArray): List<Novel> {
@@ -57,7 +84,7 @@ class FenrirRealmProvider : MainProvider() {
 
     override suspend fun search(query: String): List<Novel> {
         val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
-        val url = "$mainUrl/api/series/filter?page=1&per_page=20&search=$encodedQuery"
+        val url = "$apiBase/series?page=1&per_page=20&search=$encodedQuery"
         val response = get(url, jsonHeaders)
         return try {
             val json = JSONObject(response.text)
