@@ -131,6 +131,11 @@ class SourceEvaluationTest {
         evaluateProvider(PawReadProvider(), "cultivation")
     }
 
+    @Test
+    fun testNovelDexProvider() = skipIfNoNetwork {
+        evaluateProvider(NovelDexProvider(), "cultivation")
+    }
+
     // ======================== Bulk Tests ========================
 
     @Test
@@ -140,7 +145,7 @@ class SourceEvaluationTest {
             FreeWebNovelProvider(), NovelFireProvider(), NovelsOnlineProvider(),
             LnoriProvider(), FenrirRealmProvider(), RoyalRoadProvider(),
             WebnovelProvider(), LightNovelTranslationsProvider(), LightNovelWorldProvider(),
-            NovelBuddyProvider(), PawReadProvider()
+            NovelBuddyProvider(), PawReadProvider(), NovelDexProvider()
         )
         val errors = mutableListOf<Pair<String, String>>()
         for (provider in providers) {
@@ -164,13 +169,13 @@ class SourceEvaluationTest {
             FreeWebNovelProvider(), NovelFireProvider(), NovelsOnlineProvider(),
             LnoriProvider(), FenrirRealmProvider(), RoyalRoadProvider(),
             WebnovelProvider(), LightNovelTranslationsProvider(), LightNovelWorldProvider(),
-            NovelBuddyProvider(), PawReadProvider()
+            NovelBuddyProvider(), PawReadProvider(), NovelDexProvider()
         )
-        assert(providers.size == 14) { "Expected 14 providers, got ${providers.size}" }
+        assert(providers.size == 15) { "Expected 15 providers, got ${providers.size}" }
         providers.forEach { provider ->
             assert(provider.name.isNotBlank()) { "Provider has blank name: $provider" }
             assert(provider.mainUrl.startsWith("https://")) { "${provider.name}: mainUrl should start with https://" }
         }
-        println("All 14 providers instantiate correctly.")
+        println("All 15 providers instantiate correctly.")
     }
 }
