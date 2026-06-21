@@ -1,10 +1,14 @@
 {
-  "version": 11,
+  "version": 12,
   "url": "https://github.com/kmhmubin/kothagolp-sources/releases/latest/download/sources.apk",
   "sources": [
     {
       "id": "allnovel",
       "class": "com.kmhmubin.kothagolp.sources.AllNovelProvider"
+    },
+    {
+      "id": "cyrisia",
+      "class": "com.kmhmubin.kothagolp.sources.CyrisiaProvider"
     },
     {
       "id": "fenrirrealm",
@@ -15,16 +19,40 @@
       "class": "com.kmhmubin.kothagolp.sources.FreeWebNovelProvider"
     },
     {
+      "id": "fucknovelpia",
+      "class": "com.kmhmubin.kothagolp.sources.FuckNovelPiaProvider"
+    },
+    {
       "id": "libread",
       "class": "com.kmhmubin.kothagolp.sources.LibReadProvider"
+    },
+    {
+      "id": "lightnoveltranslations",
+      "class": "com.kmhmubin.kothagolp.sources.LightNovelTranslationsProvider"
+    },
+    {
+      "id": "lightnovelworld",
+      "class": "com.kmhmubin.kothagolp.sources.LightNovelWorldProvider"
     },
     {
       "id": "lnori",
       "class": "com.kmhmubin.kothagolp.sources.LnoriProvider"
     },
     {
+      "id": "novelarchive",
+      "class": "com.kmhmubin.kothagolp.sources.NovelArchiveProvider"
+    },
+    {
       "id": "novelbin",
       "class": "com.kmhmubin.kothagolp.sources.NovelBinProvider"
+    },
+    {
+      "id": "novelbuddy",
+      "class": "com.kmhmubin.kothagolp.sources.NovelBuddyProvider"
+    },
+    {
+      "id": "noveldex",
+      "class": "com.kmhmubin.kothagolp.sources.NovelDexProvider"
     },
     {
       "id": "novelfire",
@@ -33,6 +61,14 @@
     {
       "id": "novelsonline",
       "class": "com.kmhmubin.kothagolp.sources.NovelsOnlineProvider"
+    },
+    {
+      "id": "pawread",
+      "class": "com.kmhmubin.kothagolp.sources.PawReadProvider"
+    },
+    {
+      "id": "ranobes",
+      "class": "com.kmhmubin.kothagolp.sources.RanobesProvider"
     },
     {
       "id": "royalroad",
