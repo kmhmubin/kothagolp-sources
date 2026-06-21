@@ -33,23 +33,25 @@ class RanobesProvider : MainProvider() {
         FilterOption("Drama", "Drama"),
         FilterOption("Ecchi", "Ecchi"),
         FilterOption("Fantasy", "Fantasy"),
-        FilterOption("Gender Bender", "Gender-Bender"),
+        FilterOption("Game", "Game"),
+        FilterOption("Gender Bender", "Gender Bender"),
         FilterOption("Harem", "Harem"),
         FilterOption("Historical", "Historical"),
         FilterOption("Horror", "Horror"),
         FilterOption("Josei", "Josei"),
-        FilterOption("Martial Arts", "Martial-Arts"),
+        FilterOption("Martial Arts", "Martial Arts"),
         FilterOption("Mature", "Mature"),
         FilterOption("Mecha", "Mecha"),
         FilterOption("Mystery", "Mystery"),
         FilterOption("Psychological", "Psychological"),
         FilterOption("Romance", "Romance"),
-        FilterOption("School Life", "School-Life"),
+        FilterOption("School Life", "School Life"),
         FilterOption("Sci-fi", "Sci-fi"),
         FilterOption("Seinen", "Seinen"),
         FilterOption("Shoujo", "Shoujo"),
         FilterOption("Shounen", "Shounen"),
-        FilterOption("Slice of Life", "Slice-of-Life"),
+        FilterOption("Shounen Ai", "Shounen Ai"),
+        FilterOption("Slice of Life", "Slice of Life"),
         FilterOption("Smut", "Smut"),
         FilterOption("Sports", "Sports"),
         FilterOption("Supernatural", "Supernatural"),
@@ -69,12 +71,13 @@ class RanobesProvider : MainProvider() {
 
         val url = when {
             !genre.isNullOrBlank() -> {
-                if (page <= 1) "$mainUrl/tags/genre/$genre/"
-                else "$mainUrl/tags/genre/$genre/page/$page/"
+                val encodedGenre = genre.replace(" ", "%20")
+                if (page <= 1) "$mainUrl/tags/genre/$encodedGenre/"
+                else "$mainUrl/tags/genre/$encodedGenre/page/$page/"
             }
             sort == "updates" -> "$mainUrl/updates/page/$page/"
-            sort == "ongoing" -> "$mainUrl/novels/ongoing/${if (page > 1) "page/$page/" else ""}"
-            sort == "completed" -> "$mainUrl/novels/completed/${if (page > 1) "page/$page/" else ""}"
+            sort == "ongoing" -> "$mainUrl/tags/status-end/Ongoing/${if (page > 1) "page/$page/" else ""}"
+            sort == "completed" -> "$mainUrl/tags/status-end/Completed/${if (page > 1) "page/$page/" else ""}"
             else -> if (page <= 1) "$mainUrl/ranking/" else "$mainUrl/ranking/page/$page/"
         }
 
