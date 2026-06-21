@@ -151,6 +151,11 @@ class SourceEvaluationTest {
         evaluateProvider(FuckNovelPiaProvider(), "fantasy")
     }
 
+    @Test
+    fun testNovelArchiveProvider() = skipIfNoNetwork {
+        evaluateProvider(NovelArchiveProvider(), "cultivation")
+    }
+
     // ======================== Bulk Tests ========================
 
     @Test
@@ -186,13 +191,13 @@ class SourceEvaluationTest {
             LnoriProvider(), FenrirRealmProvider(), RoyalRoadProvider(),
             WebnovelProvider(), LightNovelTranslationsProvider(), LightNovelWorldProvider(),
             NovelBuddyProvider(), PawReadProvider(), NovelDexProvider(), RanobesProvider(),
-            CyrisiaProvider(), FuckNovelPiaProvider()
+            CyrisiaProvider(), FuckNovelPiaProvider(), NovelArchiveProvider()
         )
-        assert(providers.size == 18) { "Expected 18 providers, got ${providers.size}" }
+        assert(providers.size == 19) { "Expected 19 providers, got ${providers.size}" }
         providers.forEach { provider ->
             assert(provider.name.isNotBlank()) { "Provider has blank name: $provider" }
             assert(provider.mainUrl.startsWith("https://")) { "${provider.name}: mainUrl should start with https://" }
         }
-        println("All 18 providers instantiate correctly.")
+        println("All 19 providers instantiate correctly.")
     }
 }
