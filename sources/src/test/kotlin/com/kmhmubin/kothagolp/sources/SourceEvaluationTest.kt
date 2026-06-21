@@ -141,6 +141,11 @@ class SourceEvaluationTest {
         evaluateProvider(RanobesProvider(), "cultivation")
     }
 
+    @Test
+    fun testCyrisiaProvider() = skipIfNoNetwork {
+        evaluateProvider(CyrisiaProvider(), "cultivation")
+    }
+
     // ======================== Bulk Tests ========================
 
     @Test
@@ -150,7 +155,8 @@ class SourceEvaluationTest {
             FreeWebNovelProvider(), NovelFireProvider(), NovelsOnlineProvider(),
             LnoriProvider(), FenrirRealmProvider(), RoyalRoadProvider(),
             WebnovelProvider(), LightNovelTranslationsProvider(), LightNovelWorldProvider(),
-            NovelBuddyProvider(), PawReadProvider(), NovelDexProvider(), RanobesProvider()
+            NovelBuddyProvider(), PawReadProvider(), NovelDexProvider(), RanobesProvider(),
+            CyrisiaProvider()
         )
         val errors = mutableListOf<Pair<String, String>>()
         for (provider in providers) {
@@ -174,13 +180,14 @@ class SourceEvaluationTest {
             FreeWebNovelProvider(), NovelFireProvider(), NovelsOnlineProvider(),
             LnoriProvider(), FenrirRealmProvider(), RoyalRoadProvider(),
             WebnovelProvider(), LightNovelTranslationsProvider(), LightNovelWorldProvider(),
-            NovelBuddyProvider(), PawReadProvider(), NovelDexProvider(), RanobesProvider()
+            NovelBuddyProvider(), PawReadProvider(), NovelDexProvider(), RanobesProvider(),
+            CyrisiaProvider()
         )
-        assert(providers.size == 16) { "Expected 16 providers, got ${providers.size}" }
+        assert(providers.size == 17) { "Expected 17 providers, got ${providers.size}" }
         providers.forEach { provider ->
             assert(provider.name.isNotBlank()) { "Provider has blank name: $provider" }
             assert(provider.mainUrl.startsWith("https://")) { "${provider.name}: mainUrl should start with https://" }
         }
-        println("All 16 providers instantiate correctly.")
+        println("All 17 providers instantiate correctly.")
     }
 }
