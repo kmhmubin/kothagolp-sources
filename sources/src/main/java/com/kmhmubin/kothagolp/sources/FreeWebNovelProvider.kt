@@ -96,7 +96,12 @@ class FreeWebNovelProvider : MainProvider() {
     }
 
     private fun parseNovels(document: Document): List<Novel> {
-        val elements = document.select("div.ul-list1.ul-list1-2.ss-custom > div.li-row")
+        // Site updated class from li-row → li; try both plus Tachiyomi-compatible fallbacks
+        val elements = document.select(
+            "div.ul-list1 div.li-row, div.ul-list1 div.li, " +
+            "div.col-novel-main div.list-novel div.row, div.archive div.row, " +
+            "div.index-intro div.item"
+        )
         return elements.mapNotNull { parseNovelElement(it) }
     }
 

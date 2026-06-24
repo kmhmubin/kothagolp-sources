@@ -90,30 +90,23 @@ class RanobesProvider : MainProvider() {
     }
 
     private fun parseNovels(document: Document): List<Novel> {
-        // Ranking page uses article.rank-story
-        val rankNovels = document.select("article.rank-story").mapNotNull { article ->
-            val link = article.selectFirstOrNull("h2.title a") ?: return@mapNotNull null
+        // Combined selector covers: ranking, updates, genre, search, shortstory pages
+        val elements = document.select(
+            "article.rank-story, article.block.story.shortstory, " +
+            "div.block.story_line.story_line-img, div.short-cont"
+        )
+        return elements.mapNotNull { el ->
+            val link = el.selectFirstOrNull("h2.title a") ?: el.selectFirstOrNull("h3.title a")
+                ?: el.selectFirstOrNull("a[href*='/novels/']") ?: return@mapNotNull null
             val title = link.textOrNull()?.trim() ?: return@mapNotNull null
             val href = link.attrOrNull("href") ?: return@mapNotNull null
             val novelUrl = if (href.startsWith("http")) href else "$mainUrl$href"
-            val cover = article.selectFirstOrNull("figure img")?.attrOrNull("src")
+            val cover = el.selectFirstOrNull("figure img")?.attrOrNull("src")
                 ?.let { if (it.startsWith("http")) it else "$mainUrl$it" }
-                ?: article.selectFirstOrNull("figure.cover")?.attrOrNull("style")
+                ?: el.selectFirstOrNull("figure, figure.cover")?.attrOrNull("style")
                     ?.let { extractBgUrl(it) }
-            Novel(name = title, url = novelUrl, posterUrl = cover, apiName = this.name)
-        }
-        if (rankNovels.isNotEmpty()) return rankNovels
-
-        // Search/genre/updates pages use div.short-cont
-        return document.select("div.short-cont").mapNotNull { block ->
-            val link = block.selectFirstOrNull("h2.title a") ?: return@mapNotNull null
-            val title = link.textOrNull()?.trim() ?: return@mapNotNull null
-            val href = link.attrOrNull("href") ?: return@mapNotNull null
-            val novelUrl = if (href.startsWith("http")) href else "$mainUrl$href"
-            val cover = block.selectFirstOrNull("figure.cover")?.attrOrNull("style")
-                ?.let { extractBgUrl(it) }
-                ?: block.selectFirstOrNull("figure img")?.attrOrNull("src")
-                    ?.let { if (it.startsWith("http")) it else "$mainUrl$it" }
+                ?: el.selectFirstOrNull("i.image.cover")?.attrOrNull("style")
+                    ?.let { extractBgUrl(it) }
             Novel(name = title, url = novelUrl, posterUrl = cover, apiName = this.name)
         }
     }
